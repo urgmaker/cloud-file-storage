@@ -5,19 +5,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pet.project.CloudFileStorage.dto.UserDto;
-import pet.project.CloudFileStorage.models.Role;
 import pet.project.CloudFileStorage.models.User;
 import pet.project.CloudFileStorage.repositories.UserRepository;
 
-import static pet.project.CloudFileStorage.models.Role.ROLE_USER
+import static pet.project.CloudFileStorage.models.Role.ROLE_USER;
 
 import java.util.Set;
 
 @Service
 @Transactional
 public class UserService implements IUserService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
