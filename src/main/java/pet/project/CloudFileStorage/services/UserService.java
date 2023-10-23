@@ -1,6 +1,5 @@
 package pet.project.CloudFileStorage.services;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,11 +9,13 @@ import pet.project.CloudFileStorage.models.Role;
 import pet.project.CloudFileStorage.models.User;
 import pet.project.CloudFileStorage.repositories.UserRepository;
 
+import static pet.project.CloudFileStorage.models.Role.ROLE_USER
+
 import java.util.Set;
 
 @Service
 @Transactional
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
@@ -31,7 +32,7 @@ public class UserService implements IUserService{
         user.setUsername(userDTO.getUsername());
         user.setPassword(encodedPassword);
         user.setEmail(userDTO.getEmail());
-        user.setRoles(Set.of(Role.ROLE_USER));
+        user.setRoles(Set.of(ROLE_USER));
 
         userRepository.save(user);
     }
