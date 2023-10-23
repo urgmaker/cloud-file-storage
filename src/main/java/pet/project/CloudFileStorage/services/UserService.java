@@ -1,0 +1,38 @@
+package pet.project.CloudFileStorage.services;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pet.project.CloudFileStorage.dto.UserDto;
+import pet.project.CloudFileStorage.models.Role;
+import pet.project.CloudFileStorage.models.User;
+import pet.project.CloudFileStorage.repositories.UserRepository;
+
+import java.util.Set;
+
+@Service
+@Transactional
+public class UserService implements IUserService{
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public void registerNewUserAccount(UserDto userDTO) {
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(encodedPassword);
+        user.setEmail(userDTO.getEmail());
+        user.setRoles(Set.of(Role.ROLE_USER));
+
+        userRepository.save(user);
+    }
+}
