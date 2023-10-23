@@ -1,7 +1,6 @@
 package pet.project.CloudFileStorage.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDTO {
+public class UserDto {
     @Size(min = 2, max = 20, message = "Email should be between 2 and 20")
     @NotBlank(message = "Email should not be empty")
     private String username;
