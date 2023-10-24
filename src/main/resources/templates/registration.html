@@ -6,6 +6,8 @@
 </head>
 <body>
 <form th:method="POST" th:action="@{/registration}" th:object="${userDto}">
+    <label for="email">Введите email:</label>
+    <input type="email" th:field="*{email}" id="email">
     <label for="username">Введите имя пользователя:</label>
     <input type="text" th:field="*{username}" id="username"/>
     <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
