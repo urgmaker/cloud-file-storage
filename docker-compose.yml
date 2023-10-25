@@ -1,17 +1,17 @@
 version: "3.9"
 
 services:
-  cloud-file-storage-app:
-    image: urgmaker/cloud-file-storage
-    ports:
-      - "8082:8080"
-    environment:
-      - SPRING_DB_USER=postgres
-      - SPRING_DB_PASSWORD=pass
-      - SPRING_DB_URL=jdbc:postgresql://localhost:5432/postgres
-    depends_on:
-      database:
-        condition: service_healthy
+#  cloud-file-storage-app:
+#    image: urgmaker/cloud-file-storage
+#    ports:
+#      - "8082:8080"
+#    environment:
+#      - SPRING_DB_USER=postgres
+#      - SPRING_DB_PASSWORD=pass
+#      - SPRING_DB_URL=jdbc:postgresql://localhost:5432/postgres
+#    depends_on:
+#      database:
+#        condition: service_healthy
 
   database:
     image: postgres:latest
