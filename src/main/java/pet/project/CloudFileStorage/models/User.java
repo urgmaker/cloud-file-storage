@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,5 +35,10 @@ public class User {
     @Column(unique = true, nullable = false)
     @NotBlank
     private String email;
+
     private Role roles;
+
+    public List<Role> getRoles() {
+        return Collections.singletonList(roles);
+    }
 }
