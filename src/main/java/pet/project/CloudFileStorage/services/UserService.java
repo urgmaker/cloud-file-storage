@@ -10,6 +10,7 @@ import pet.project.CloudFileStorage.repositories.UserRepository;
 
 import static pet.project.CloudFileStorage.models.Role.ROLE_USER;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -31,7 +32,7 @@ public class UserService implements IUserService {
         user.setUsername(userDTO.getUsername());
         user.setPassword(encodedPassword);
         user.setEmail(userDTO.getEmail());
-        user.setRoles(Set.of(ROLE_USER));
+        user.setRoles(ROLE_USER);
 
         userRepository.save(user);
     }
