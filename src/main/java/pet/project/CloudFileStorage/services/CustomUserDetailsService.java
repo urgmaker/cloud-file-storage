@@ -12,7 +12,9 @@ import pet.project.CloudFileStorage.models.User;
 import pet.project.CloudFileStorage.repositories.UserRepository;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -41,15 +43,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                 accountNonExpired,
                 credentialsNonExpired,
                 accountNonLocked,
-                getAuthorities(user.getRoles())
+                getAuthorities(user)
         );
     }
 
-    private static Set<SimpleGrantedAuthority> getAuthorities(Set<Role> roles) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.name()));
-        }
-        return authorities;
+    private static List<SimpleGrantedAuthority> getAuthorities(User user) {
+        return user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .collect(Collectors.toList());
     }
 }
