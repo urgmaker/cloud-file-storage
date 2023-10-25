@@ -33,5 +33,5 @@ public class User {
     @Column(unique = true, nullable = false)
     @NotBlank
     private String email;
-    private Set<Role> roles;
+    private Role roles;
 }
