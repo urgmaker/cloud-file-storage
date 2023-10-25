@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  cloud-file-storage-app:
+    image: urgmaker/cloud-file-storage
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_DB_USER=postgres
+      - SPRING_DB_PASSWORD=pass
+      - SPRING_DB_URL=jdbc:postgresql://localhost:5432/postgres
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:latest
+    volumes:
+      - ~/data/postgres:/var/lib/postgresql/data/
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=cloud_file_storage
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
