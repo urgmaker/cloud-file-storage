@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pet.project.CloudFileStorage.dto.UserDto;
+import pet.project.CloudFileStorage.exceptions.InvalidUserRegistrationException;
 import pet.project.CloudFileStorage.services.UserService;
+import pet.project.CloudFileStorage.utils.ResponseError;
 import pet.project.CloudFileStorage.utils.UserValidator;
 
 @Controller
@@ -34,7 +36,7 @@ public class RegistrationController {
         userValidator.validate(userDto, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "registration";
+            throw new InvalidUserRegistrationException(ResponseError.getErrorMessage(bindingResult));
         }
         userService.registerNewUserAccount(userDto);
         return "redirect:/login";
