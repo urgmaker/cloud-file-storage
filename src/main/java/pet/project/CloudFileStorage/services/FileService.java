@@ -29,7 +29,7 @@ public class FileService {
                 .object(getUserRootFolderPrefix(fileDownloadDto.getOwner()) + fileDownloadDto.getPath())
                 .build();
         try (GetObjectResponse object = minioClient.getObject(getObjectArgs)) {
-            return new ByteArrayResource(object.readAllBytes())
+            return new ByteArrayResource(object.readAllBytes());
         } catch (Exception e) {
             throw new FileOperationException("Download error! Please, try again later.");
         }
