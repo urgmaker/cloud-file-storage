@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pet.project.CloudFileStorage.dto.file.FileDownloadDto;
+import pet.project.CloudFileStorage.dto.file.FileRenameDto;
 import pet.project.CloudFileStorage.dto.file.FileUploadDto;
 import pet.project.CloudFileStorage.exceptions.file.InvalidFileDownloadException;
+import pet.project.CloudFileStorage.exceptions.file.InvalidFileRenameException;
 import pet.project.CloudFileStorage.exceptions.file.InvalidFileUploadException;
 import pet.project.CloudFileStorage.services.FileService;
 import pet.project.CloudFileStorage.utils.ResponseError;
@@ -52,6 +54,18 @@ public class FileController {
         fileService.uploadFile(fileUploadDto);
 
         redirectAttributes.addFlashAttribute("success", "File uploaded successfully");
+        return new RedirectView("/");
+    }
+
+    @PutMapping
+    public RedirectView renameFile(@Valid @ModelAttribute("fileRenameDto") FileRenameDto fileRenameDto,
+                                   BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidFileRenameException(ResponseError.getErrorMessage(bindingResult));
+        }
+        fileService.renameFile(fileRenameDto);
+
+        redirectAttributes.addFlashAttribute("success", "File renamed successfully");
         return new RedirectView("/");
     }
 }
