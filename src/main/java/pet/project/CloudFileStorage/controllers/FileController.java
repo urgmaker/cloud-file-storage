@@ -1,17 +1,19 @@
 package pet.project.CloudFileStorage.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import pet.project.CloudFileStorage.dto.file.FileDownloadDto;
+import pet.project.CloudFileStorage.dto.file.FileUploadDto;
 import pet.project.CloudFileStorage.exceptions.file.InvalidFileDownloadException;
+import pet.project.CloudFileStorage.exceptions.file.InvalidFileUploadException;
 import pet.project.CloudFileStorage.services.FileService;
 import pet.project.CloudFileStorage.utils.ResponseError;
 
@@ -27,7 +29,7 @@ public class FileController {
 
     @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public ResponseEntity<ByteArrayResource> downloadFile(@ModelAttribute("fileDownloadDto")
+    public ResponseEntity<ByteArrayResource> downloadFile(@Valid @ModelAttribute("fileDownloadDto")
                                                               FileDownloadDto fileDownloadDto,
                                                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -39,5 +41,17 @@ public class FileController {
         return ResponseEntity.ok()
                 .header("Content-Disposition", "attachment; filename=" + fileDownloadDto.getName())
                 .body(file);
+    }
+
+    @PostMapping
+    public RedirectView uploadFile(@Valid @ModelAttribute("fileUploadDto") FileUploadDto fileUploadDto,
+                                   BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidFileUploadException(ResponseError.getErrorMessage(bindingResult));
+        }
+        fileService.uploadFile(fileUploadDto);
+
+        redirectAttributes.addFlashAttribute("success", "File uploaded successfully");
+        return new RedirectView("/");
     }
 }
