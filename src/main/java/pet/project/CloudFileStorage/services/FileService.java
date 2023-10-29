@@ -6,6 +6,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pet.project.CloudFileStorage.config.minio.MinioBucketConfiguration;
+import pet.project.CloudFileStorage.dto.MinioObjectDto;
 import pet.project.CloudFileStorage.dto.file.FileDeleteDto;
 import pet.project.CloudFileStorage.dto.file.FileDownloadDto;
 import pet.project.CloudFileStorage.dto.file.FileRenameDto;
@@ -13,6 +14,7 @@ import pet.project.CloudFileStorage.dto.file.FileUploadDto;
 import pet.project.CloudFileStorage.exceptions.file.FileOperationException;
 
 import java.io.InputStream;
+import java.util.List;
 
 import static pet.project.CloudFileStorage.utils.MinioRootFolder.getUserRootFolderPrefix;
 

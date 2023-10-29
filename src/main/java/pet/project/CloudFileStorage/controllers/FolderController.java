@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import pet.project.CloudFileStorage.dto.folder.FolderRenameDto;
 import pet.project.CloudFileStorage.dto.folder.FolderUploadDto;
+import pet.project.CloudFileStorage.exceptions.folder.InvalidFolderRenameException;
 import pet.project.CloudFileStorage.exceptions.folder.InvalidFolderUploadException;
 import pet.project.CloudFileStorage.services.FolderService;
 import pet.project.CloudFileStorage.utils.ResponseError;
@@ -37,6 +39,19 @@ public class FolderController {
         folderService.uploadFolder(folderUploadDto);
 
         redirectAttributes.addFlashAttribute("success", "Folder uploaded successfully");
+        return new RedirectView("/");
+    }
+
+    @PostMapping
+    public RedirectView renameFolder(@Valid @ModelAttribute("folderRenameDto") FolderRenameDto folderRenameDto,
+                                     BindingResult bindingResult,
+                                     RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidFolderRenameException(ResponseError.getErrorMessage(bindingResult));
+        }
+        folderService.renameFolder(folderRenameDto);
+
+        redirectAttributes.addFlashAttribute("success", "Folder renamed successfully");
         return new RedirectView("/");
     }
 
