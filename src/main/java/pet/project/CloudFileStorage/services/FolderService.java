@@ -111,4 +111,40 @@ public class FolderService {
             }
         });
     }
+
+    private static String getPathWithNewFolder(String path, String oldName, String newName) {
+        oldName = "/" + oldName + "/";
+        newName = "/" + newName + "/";
+        return path.replace(oldName, newName);
+    }
+
+    private List<DeleteObject> convertToDeleteObjects(List<MinioObjectDto> files) {
+        List<DeleteObject> objects = new ArrayList<>();
+
+        for (MinioObjectDto file : files) {
+            objects.add(new DeleteObject(getUserRootFolderPrefix(file.getOwner()) + file.getPath()));
+        }
+
+        return objects;
+    }
+
+    private List<SnowballObject> convertToUploadObjects(List<MultipartFile> files, String owner) throws IOException {
+        List<SnowballObject> objects = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
+                continue;
+            }
+
+            SnowballObject snowballObject = new SnowballObject(
+                    getUserRootFolderPrefix(owner) + file.getOriginalFilename(),
+                    file.getInputStream(),
+                    file.getSize(),
+                    null
+            );
+            objects.add(snowballObject);
+        }
+
+        return objects;
+    }
 }

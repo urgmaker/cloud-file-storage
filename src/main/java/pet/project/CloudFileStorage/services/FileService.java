@@ -29,6 +29,10 @@ public class FileService {
         this.minioBucketConfiguration = minioBucketConfiguration;
     }
 
+    public List<MinioObjectDto> getAllUserFiles(String username, String folder) {
+
+    }
+
     public ByteArrayResource downloadFile(FileDownloadDto fileDownloadDto) {
         GetObjectArgs getObjectArgs = GetObjectArgs.builder()
                 .bucket(minioBucketConfiguration.getBucketName())
