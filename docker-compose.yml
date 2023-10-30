@@ -1,17 +1,21 @@
 version: "3.9"
 
 services:
-#  cloud-file-storage-app:
-#    image: urgmaker/cloud-file-storage
-#    ports:
-#      - "8082:8080"
-#    environment:
-#      - SPRING_DB_USER=postgres
-#      - SPRING_DB_PASSWORD=pass
-#      - SPRING_DB_URL=jdbc:postgresql://localhost:5432/postgres
-#    depends_on:
-#      database:
-#        condition: service_healthy
+  cloud-file-storage-app:
+    image: urgmaker/cloud-file-storage
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_DB_USER=postgres
+      - SPRING_DB_PASSWORD=pass
+      - SPRING_DB_URL=jdbc:postgresql://localhost:5432/postgres
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
 
   database:
     image: postgres:latest
@@ -22,6 +26,22 @@ services:
       - POSTGRES_DB=cloud_file_storage
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=pass
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    command: redis-server
+    volumes:
+      - redis_storage:/var/lib/redis
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   minio:
     image: minio/minio:latest
@@ -32,7 +52,13 @@ services:
       - MINIO_ROOT_PASSWORD=password
     ports:
       - "9000:9000"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://78.153.130.215:9000/minio/health/live" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
   minio_storage:
+  redis_storage:
