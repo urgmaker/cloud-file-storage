@@ -3,13 +3,13 @@ package pet.project.CloudFileStorage.controllers;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import pet.project.CloudFileStorage.dto.folder.FolderDeleteDto;
 import pet.project.CloudFileStorage.dto.folder.FolderRenameDto;
 import pet.project.CloudFileStorage.dto.folder.FolderUploadDto;
+import pet.project.CloudFileStorage.exceptions.folder.InvalidFolderDeleteException;
 import pet.project.CloudFileStorage.exceptions.folder.InvalidFolderRenameException;
 import pet.project.CloudFileStorage.exceptions.folder.InvalidFolderUploadException;
 import pet.project.CloudFileStorage.services.FolderService;
@@ -42,7 +42,7 @@ public class FolderController {
         return new RedirectView("/");
     }
 
-    @PostMapping
+    @PutMapping
     public RedirectView renameFolder(@Valid @ModelAttribute("folderRenameDto") FolderRenameDto folderRenameDto,
                                      BindingResult bindingResult,
                                      RedirectAttributes redirectAttributes) {
@@ -52,6 +52,19 @@ public class FolderController {
         folderService.renameFolder(folderRenameDto);
 
         redirectAttributes.addFlashAttribute("success", "Folder renamed successfully");
+        return new RedirectView("/");
+    }
+
+    @DeleteMapping
+    public RedirectView deleteFolder(@Valid @ModelAttribute("folderDeleteDto") FolderDeleteDto folderDeleteDto,
+                                     BindingResult bindingResult,
+                                     RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidFolderDeleteException(ResponseError.getErrorMessage(bindingResult));
+        }
+        folderService.deleteFolder(folderDeleteDto);
+
+        redirectAttributes.addFlashAttribute("success", "Folder deleted successfully");
         return new RedirectView("/");
     }
 
