@@ -30,7 +30,8 @@ public class FileService {
     }
 
     public List<MinioObjectDto> getAllUserFiles(String username, String folder) {
-
+        // TODO
+        return null;
     }
 
     public ByteArrayResource downloadFile(FileDownloadDto fileDownloadDto) {
